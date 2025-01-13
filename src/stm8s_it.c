@@ -283,9 +283,10 @@ INTERRUPT_HANDLER(TIM1_CAP_COM_IRQHandler, 12)
   */
  INTERRUPT_HANDLER(TIM2_CAP_COM_IRQHandler, 14)
 {
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
+  if (TIM2->SR1 & TIM2_SR1_CC1IF) {
+        // Resetuje flag přerušení pro CCR1
+        TIM2->SR1 &= ~TIM2_SR1_CC1IF;
+ }
 }
 #endif /*STM8S903*/
 
