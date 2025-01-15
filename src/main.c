@@ -9,6 +9,9 @@
 #define PWM_PORT GPIOD
 #define PWM_PIN GPIO_PIN_4
 
+#define MAX_CCR 1990
+#define MIN_CCR 1010
+
 
 void init(void)
 {
@@ -22,6 +25,7 @@ void init(void)
 }
 
 void pwm_init(void){
+    TIM2_DeInit();
     CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2,ENABLE);
 
     TIM2_TimeBaseInit(TIM2_PRESCALER_16,1999);
@@ -37,11 +41,11 @@ void pwm_init(void){
       enableInterrupts();
 }
 
-void nastaveni_uhlu(uint16_t poloha){ 
-    uint16_t pulz = 999 +((poloha*247)-250);
+void nastaveni_uhlu(uint16_t uhel){ 
+    uint16_t pulz = MIN_CCR +(uhel*((MAX_CCR-MIN_CCR)/180));
     TIM2_SetCompare1(pulz);
     //printf("Šířka pulzu: %u\n", pulz);
-    //printf("Šířka uhlu: %u\n", poloha);
+    //printf("úhel: %u\n", uhel);
 }
 
 int main(void)
@@ -60,19 +64,19 @@ int main(void)
             pozice = pozice + 1;
         }
         if (pozice == 1){
-            nastaveni_uhlu(1);
+            nastaveni_uhlu(0);
         }
         else if (pozice == 2){
-            nastaveni_uhlu(2);
+            nastaveni_uhlu(45);
         }
         else if(pozice == 3){
-            nastaveni_uhlu(3);
+            nastaveni_uhlu(90);
         }
         else if(pozice == 4){
-            nastaveni_uhlu(4);
+            nastaveni_uhlu(135);
         }
         else if(pozice == 5){
-            nastaveni_uhlu(5);
+            nastaveni_uhlu(180);
         }
 
         if(pozice >5){
