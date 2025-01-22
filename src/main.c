@@ -9,8 +9,8 @@
 #define PWM_PORT GPIOD
 #define PWM_PIN GPIO_PIN_4
 
-#define MAX_CCR 1990
-#define MIN_CCR 1010
+#define MAX_CCR 2500
+#define MIN_CCR 500
 
 
 void init(void)
@@ -28,19 +28,19 @@ void pwm_init(void){
     TIM2_DeInit();
     CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2,ENABLE);
 
-    TIM2_TimeBaseInit(TIM2_PRESCALER_16,1999);
+    TIM2_TimeBaseInit(TIM2_PRESCALER_16,19999);
     TIM2_OC1Init(TIM2_OCMODE_PWM1,
      TIM2_OUTPUTSTATE_ENABLE,
       1500,
       TIM2_OCPOLARITY_HIGH);
       TIM2_OC1PreloadConfig(ENABLE);
 
-      TIM2_ITConfig(TIM2_IT_CC1,ENABLE);
+      //TIM2_ITConfig(TIM2_IT_CC1,ENABLE);
 
       TIM2_Cmd(ENABLE);
-      enableInterrupts();
+      //enableInterrupts();
 }
-
+   
 void nastaveni_uhlu(uint16_t uhel){ 
     uint16_t pulz = MIN_CCR +(uhel*((MAX_CCR-MIN_CCR)/180));
     TIM2_SetCompare1(pulz);
